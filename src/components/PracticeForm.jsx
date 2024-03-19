@@ -1,6 +1,11 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
 
 const PracticeForm = () => {
+    const form = useForm();
+    const { register } = form;
+    const { name, ref, onChange, onBlur } = register("username")
+
     return (
         <div className="formDiv">
             <form>
