@@ -4,3 +4,15 @@
   padding: 2rem;
   text-align: center;
 }
+
+.error {
+  color: red;
+  font-size: small;
+  margin: 2px;
+  padding: 0;
+  text-align: center;
+}
+
+.form-control {
+  margin-bottom: 20px;
+}
