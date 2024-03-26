@@ -13,6 +13,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+h1,
+h2 {
+  display: block;
+  width: 100%;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -60,15 +66,19 @@ button:focus-visible {
 input {
   display: block;
   margin-bottom: 50px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .formDiv {
   display: flex;
+  flex-wrap: wrap;
+  width: 100%;
   border: 2px solid #747bff;
   padding: 10px;
-  margin: 30px;
-  justify-content: center;
-  align-items: center;
+  margin: auto;
+  justify-content: space-evenly;
+
 }
 
 

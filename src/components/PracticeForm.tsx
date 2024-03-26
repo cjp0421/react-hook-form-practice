@@ -1,3 +1,4 @@
+// import { useEffect } from "react";
 import { useForm, useFieldArray } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools'; // used to visualize the form data in dev environment
 
@@ -46,8 +47,10 @@ const PracticeForm = () => {
         }
     });
     // const { name, ref, onChange, onBlur } = register("username")
-    const { register, control, handleSubmit, formState } = form;
-    const { errors } = formState;
+    const { register, control, handleSubmit, formState, watch, getValues, setValue } = form;
+    //unlike watch, getValues doesn't trigger rerenders or subscribe to input changes
+    //this makes it a better option for getting form values when a user clicks on a button or performs a specific action
+    const { errors, touchedFields, dirtyFields, isDirty } = formState;
 
     const { fields, append, remove } = useFieldArray({
         name: 'extraPhNumbers',
@@ -55,12 +58,37 @@ const PracticeForm = () => {
     })
 
 
+    console.log({ touchedFields, dirtyFields, isDirty })
+
     const onSubmit = (data: FormValues) => {
         console.log('Form submitted.', data)
     }
 
+    const handleGetValues = () => {
+        console.log("Get Values: ", getValues(["social.twatter", "channel"]))
+    }
+
+    const handleSetValue = () => {
+        setValue("username", "", {
+            shouldValidate: true,
+            shouldDirty: true,
+            shouldTouch: true,
+        });
+    }
+
+    // useEffect(() => {
+    //     const subscription = watch((value) => {
+    //         console.log(value.age)
+    //     })
+    //     return () => subscription.unsubscribe();
+    // }, [watch])
+
+    const watchUsername = watch(["username"])
+
     return (
-        <div className="formDiv">
+        <div className="formDiv container">
+            <h1>React Hook Form Practice</h1>
+            <h2>Watched Value: {watchUsername}</h2>
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
                 <div className='form-control'>
                     <label htmlFor="username">Username</label>
@@ -174,13 +202,18 @@ const PracticeForm = () => {
                                 <div className="form-control" key={field.id}>
                                     <input
                                         type="text"
-                                        {...register(`extraPhNumbers.${index}.number` as const)}
+                                        {...register(`extraPhNumbers.${index}.number` as const, {
+                                            disabled: watch("phoneNumbers.0") === ''
+                                        }
+                                        )}
                                     />
                                     {
                                         index > 0 && (
                                             <button
                                                 type="button"
-                                                onClick={() => remove(index)}>
+                                                onClick={() => remove(index)}
+
+                                            >
                                                 Remove Number
                                             </button>
                                         )
@@ -188,15 +221,17 @@ const PracticeForm = () => {
                                 </div>
                             );
                         })}
-                        <button
+                        {watch("phoneNumbers.0") !== '' && <button
                             type="button"
                             onClick={() => append({ number: "" })}>
                             Add Extra Number
-                        </button>
+                        </button>}
                     </div>
                 </div>
 
                 <button>Submit</button>
+                <button type="button" onClick={handleGetValues}>Get Values</button>
+                <button type="button" onClick={handleSetValue}>Set Value</button>
 
             </form>
             <DevTool control={control} />
